@@ -1,2 +1,71 @@
-node_modules
+```
+# Dependencies
+node_modules/
+
+# Logs
+*.log
+
+# Environment variables
 .env
+.env.local
+.env.*
+
+# IDE files
+.vscode/
+.idea/
+
+# Build artifacts
+dist/
+build/
+target/
+
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Temporary files
+*.tmp
+*.swp
+*.swo
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Coverage reports
+coverage/
+htmlcov/
+.coverage
+
+# Package lock files
+package-lock.json
+yarn.lock
+
+# Test coverage
+.nyc_output/
+coverage/
+
+# Database
+*.db
+*.sqlite
+*.sqlite3
+
+# Processed images (if generated)
+*.min.js
+*.min.css
+
+# Local configuration
+config/local.*
+!config/database.js
+!config/db.js
+
+# Test specific ignores
+tests/fixtures/*.json
+tests/fixtures/*.yaml
+tests/fixtures/*.yml
+
+# Original rules preserved
+*.log
+```
