@@ -66,13 +66,13 @@ describe('Product Service - Unit Tests', () => {
       // Arrange
       MockProductModel.seed([
         productFixtures.cheapProduct,
-        productFixtures.expensiveProduct,
-        productFixtures.laptopProduct
+        productFixtures.midRangeProduct,
+        productFixtures.expensiveProduct
       ]);
 
       // Act
       const result = await productService.getAllProducts({
-        minPrice: 100,
+        minPrice: 50,
         maxPrice: 1000,
         page: 1,
         limit: 10
@@ -81,7 +81,7 @@ describe('Product Service - Unit Tests', () => {
       // Assert
       expect(result.products).toHaveLength(2);
       result.products.forEach(product => {
-        expect(product.price).toBeGreaterThanOrEqual(100);
+        expect(product.price).toBeGreaterThanOrEqual(50);
         expect(product.price).toBeLessThanOrEqual(1000);
       });
     });
@@ -139,8 +139,8 @@ describe('Product Service - Unit Tests', () => {
     });
 
     it('should throw error when product not found', async () => {
-      // Arrange
-      const nonExistentId = 'non-existent-id';
+      // Arrange - Use a valid ObjectId format that doesn't exist in mock
+      const nonExistentId = '507f1f77bcf86cd799439011';
 
       // Act & Assert
       await expect(productService.getProductById(nonExistentId))
@@ -184,6 +184,7 @@ describe('Product Service - Unit Tests', () => {
       // Arrange
       MockProductModel.seed([productFixtures.laptopProduct]);
       const existingProduct = MockProductModel.getAll()[0];
+      const originalUpdatedAt = existingProduct.updatedAt;
       const updateData = productFixtures.updateProduct;
 
       // Act
@@ -195,12 +196,12 @@ describe('Product Service - Unit Tests', () => {
       // Assert
       expect(updatedProduct.name).toBe(updateData.name);
       expect(updatedProduct.price).toBe(updateData.price);
-      expect(updatedProduct.updatedAt).not.toEqual(existingProduct.updatedAt);
+      expect(updatedProduct.updatedAt).not.toEqual(originalUpdatedAt);
     });
 
     it('should throw error when updating non-existent product', async () => {
-      // Arrange
-      const nonExistentId = 'non-existent-id';
+      // Arrange - Use a valid ObjectId format that doesn't exist in mock
+      const nonExistentId = '507f1f77bcf86cd799439011';
       const updateData = { name: 'Updated Name' };
 
       // Act & Assert
@@ -228,8 +229,8 @@ describe('Product Service - Unit Tests', () => {
     });
 
     it('should throw error when deleting non-existent product', async () => {
-      // Arrange
-      const nonExistentId = 'non-existent-id';
+      // Arrange - Use a valid ObjectId format that doesn't exist in mock
+      const nonExistentId = '507f1f77bcf86cd799439011';
 
       // Act & Assert
       await expect(productService.deleteProduct(nonExistentId))
@@ -265,8 +266,8 @@ describe('Product Service - Unit Tests', () => {
     });
 
     it('should throw error when adding review to non-existent product', async () => {
-      // Arrange
-      const nonExistentId = 'non-existent-id';
+      // Arrange - Use a valid ObjectId format that doesn't exist in mock
+      const nonExistentId = '507f1f77bcf86cd799439011';
       const reviewData = {
         rating: 5,
         comment: 'Great!',
@@ -326,8 +327,8 @@ describe('Product Service - Unit Tests', () => {
     });
 
     it('should throw error when updating stock of non-existent product', async () => {
-      // Arrange
-      const nonExistentId = 'non-existent-id';
+      // Arrange - Use a valid ObjectId format that doesn't exist in mock
+      const nonExistentId = '507f1f77bcf86cd799439011';
 
       // Act & Assert
       await expect(productService.updateStock(nonExistentId, 5))

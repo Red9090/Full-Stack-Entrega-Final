@@ -4,6 +4,27 @@
 
 const { products } = require('../fixtures/product.fixtures');
 
+// Mock mongoose before any imports
+jest.mock('mongoose', () => ({
+  Types: {
+    ObjectId: {
+      isValid: (id) => {
+        // Accept both numeric string IDs (for mock) and valid MongoDB ObjectIds
+        if (!id) return false;
+        // Check if it's a valid MongoDB ObjectId format (24 hex characters)
+        if (/^[0-9a-fA-F]{24}$/.test(id)) return true;
+        // Also accept numeric strings for mock testing
+        if (/^\d+$/.test(id)) return true;
+        return false;
+      }
+    }
+  },
+  Schema: jest.fn(),
+  model: jest.fn(),
+  connect: jest.fn(),
+  disconnect: jest.fn()
+}));
+
 /**
  * Create a mock product document with Mongoose-like methods
  */
@@ -28,10 +49,22 @@ class MockProductModel {
   }
 
   /**
+   * Generate a valid MongoDB ObjectId format (24 hex characters)
+   */
+  generateObjectId() {
+    const chars = '0123456789abcdef';
+    let id = '';
+    for (let i = 0; i < 24; i++) {
+      id += chars[Math.floor(Math.random() * 16)];
+    }
+    return id;
+  }
+
+  /**
    * Create a mock product document
    */
   async create(productData) {
-    const id = String(this.idCounter++);
+    const id = this.generateObjectId();
     const product = createMockProductDoc({
       _id: id,
       ...productData,
@@ -93,7 +126,8 @@ class MockProductModel {
                 return Promise.resolve(results);
               }
             };
-          }
+          },
+          then: (resolve) => resolve(results)
         };
       },
       then: (resolve) => resolve(results)
@@ -104,7 +138,14 @@ class MockProductModel {
    * Find product by ID
    */
   async findById(id) {
-    const product = this.products.get(id);
+    // Try to find by exact ID first
+    let product = this.products.get(id);
+    
+    // If not found and id looks like a counter-based ID, try converting
+    if (!product && !isNaN(id)) {
+      product = this.products.get(String(id));
+    }
+    
     return product ? createMockProductDoc(product) : null;
   }
 
@@ -112,7 +153,13 @@ class MockProductModel {
    * Find by ID and update
    */
   async findByIdAndUpdate(id, updateData, options = {}) {
-    const product = this.products.get(id);
+    // Try to find by exact ID first
+    let product = this.products.get(id);
+    
+    // If not found and id looks like a counter-based ID, try converting
+    if (!product && !isNaN(id)) {
+      product = this.products.get(String(id));
+    }
     
     if (!product) {
       return options.new ? null : product;
@@ -149,10 +196,22 @@ class MockProductModel {
    */
   async deleteOne(query) {
     if (query._id) {
-      const product = this.products.get(query._id);
+      const id = query._id;
+      let product = this.products.get(id);
+      
+      // If not found and id looks like a counter-based ID, try converting
+      if (!product && !isNaN(id)) {
+        product = this.products.get(String(id));
+      }
+      
       if (product) {
-        product.isActive = false;
-        this.products.set(query._id, product);
+        // Create updated product with isActive = false
+        const updatedProduct = createMockProductDoc({
+          ...product,
+          isActive: false,
+          updatedAt: new Date()
+        });
+        this.products.set(id, updatedProduct);
         return { deletedCount: 1 };
       }
     }
@@ -180,7 +239,11 @@ class MockProductModel {
   seed(initialProducts = []) {
     this.clear();
     initialProducts.forEach(p => {
-      const id = String(this.idCounter++);
+      // Use the provided _id if it exists, otherwise generate one
+      const id = p._id || String(this.idCounter++);
+      if (!p._id) {
+        this.idCounter++;
+      }
       const product = createMockProductDoc({
         _id: id,
         ...p,

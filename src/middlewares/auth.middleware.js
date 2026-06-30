@@ -1,5 +1,9 @@
 const jwt = require('jsonwebtoken');
-const config = require('../config/database');
+
+// Use test config in test environment, otherwise use production config
+const config = process.env.NODE_ENV === 'test' 
+  ? require('../../tests/helpers/test.config')
+  : require('../config/database');
 
 /**
  * Middleware factory to verify JWT token and authenticate user
@@ -25,7 +29,7 @@ function createAuthMiddleware(options = {}) {
         });
       }
 
-      const decoded = jwt.verify(token, config.jwtSecret);
+      const decoded = jwt.verify(token, config.JWT_SECRET || config.jwtSecret);
       req.user = decoded;
       
       // Check admin role if required

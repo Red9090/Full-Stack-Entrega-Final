@@ -164,7 +164,7 @@ describe('Product Routes - E2E Tests', () => {
 
       // Assert
       expect(response.body.success).toBe(false);
-      expect(response.body.message).toContain('Invalid ID');
+      expect(response.body.message).toContain('Invalid product ID');
     });
   });
 

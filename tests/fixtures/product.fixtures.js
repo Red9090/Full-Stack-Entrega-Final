@@ -113,12 +113,12 @@ exports.products = {
   },
 
   cheapProduct: {
-    name: 'USB-C Cable',
-    description: 'Fast charging USB-C cable',
-    price: 19.99,
+    name: 'USB-C Hub',
+    description: 'Multi-port USB-C hub with HDMI',
+    price: 49.99,
     category: 'accessories',
     stock: 200,
-    brand: 'Generic'
+    brand: 'Anker'
   },
 
   expensiveProduct: {
@@ -128,6 +128,15 @@ exports.products = {
     category: 'accessories',
     stock: 15,
     brand: 'LG'
+  },
+
+  midRangeProduct: {
+    name: 'Wireless Keyboard',
+    description: 'Mechanical wireless keyboard',
+    price: 129.99,
+    category: 'accessories',
+    stock: 50,
+    brand: 'Logitech'
   }
 };
 

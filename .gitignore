@@ -1,71 +1,38 @@
 ```
+# Coverage reports
+coverage/
+*.lcov
+*.info
+
+# Build artifacts
+build/
+dist/
+
 # Dependencies
 node_modules/
+.npm/
+.yarn/
 
 # Logs
 *.log
 
-# Environment variables
+# Environment
 .env
 .env.local
-.env.*
+*.env.*
 
-# IDE files
+# Editor/IDE
 .vscode/
 .idea/
-
-# Build artifacts
-dist/
-build/
-target/
-
-# Python cache
-__pycache__/
-*.pyc
-*.pyo
-*.pyd
-
-# Temporary files
-*.tmp
 *.swp
 *.swo
+*.tmp
 
-# OS files
+# OS
 .DS_Store
 Thumbs.db
 
-# Coverage reports
-coverage/
-htmlcov/
-.coverage
-
-# Package lock files
-package-lock.json
-yarn.lock
-
-# Test coverage
+# Testing
 .nyc_output/
 coverage/
-
-# Database
-*.db
-*.sqlite
-*.sqlite3
-
-# Processed images (if generated)
-*.min.js
-*.min.css
-
-# Local configuration
-config/local.*
-!config/database.js
-!config/db.js
-
-# Test specific ignores
-tests/fixtures/*.json
-tests/fixtures/*.yaml
-tests/fixtures/*.yml
-
-# Original rules preserved
-*.log
 ```
